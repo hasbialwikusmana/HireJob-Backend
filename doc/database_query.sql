@@ -12,5 +12,5 @@ CREATE TABLE users (
     instagram VARCHAR,
     github VARCHAR,
     linkedin VARCHAR,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
