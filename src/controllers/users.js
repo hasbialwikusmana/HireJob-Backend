@@ -105,7 +105,6 @@ const userController = {
     commonHelper.response(res, user, 200);
   },
 
-  // recrutiter
   registerRecruiter: async (req, res) => {
     try {
       const { email, password, name, phone, company, position } = req.body;
@@ -166,10 +165,8 @@ const userController = {
       const { name, phone, description } = req.body;
 
       const data = { id: user.id, name, phone, description };
-      console.log(data);
       updateUser(data)
         .then((result) => {
-          console.log(result);
           commonHelper.response(res, result.rows, 200, "Worker updated");
         })
         .catch((err) => res.status(500).json(err));
@@ -182,8 +179,6 @@ const userController = {
     try {
       const email = req.payload.email;
       const role = req.payload.role;
-
-      // Pastikan peran pengguna adalah "worker" sebelum melanjutkan
       if (role !== "worker") {
         return res.status(403).json({
           message: "Unauthorized. Only workers can update their photo.",
@@ -230,10 +225,8 @@ const userController = {
       const { name, phone, description, company, position } = req.body;
 
       const data = { id: user.id, name, phone, description, company, position };
-      console.log(data);
       updaterecruiter(data)
         .then((result) => {
-          console.log(result);
           commonHelper.response(res, result.rows, 200, "Recruiter updated");
         })
         .catch((err) => res.status(500).json(err));
@@ -247,7 +240,6 @@ const userController = {
       const email = req.payload.email;
       const role = req.payload.role;
 
-      // Pastikan peran pengguna adalah "worker" sebelum melanjutkan
       if (role !== "recruiter") {
         return res.status(403).json({
           message: "Unauthorized. Only workers can update their photo.",
