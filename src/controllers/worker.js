@@ -40,25 +40,42 @@ const workerController = {
 
   registerWorker: async (req, res) => {
     try {
-      const { name, email, phone_number, password } = req.body;
-      const { rowCount } = await findEmail(email);
-      const salt = bcrypt.genSaltSync(10);
-      const passwordHash = bcrypt.hashSync(password, salt);
-      const id = uuidv4();
+      const { name, email, nohp, password, confirmPassword, role } = req.body;
 
+      const { rowCount } = await findEmail(email);
+      // Check if email already exists
       if (rowCount) {
         return res.json({
           Message: "Email is already exist",
         });
       }
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        return res.json({
+          Message: "Password and confirm password do not match",
+        });
+      }
+
+      // Check if role is not "workers"
+      if (role !== "workers") {
+        return res.json({
+          Message: "Invalid role. Registration is only allowed for workers",
+        });
+      }
+
+      const salt = bcrypt.genSaltSync(10);
+      const passwordHash = bcrypt.hashSync(password, salt);
+      const id = uuidv4();
 
       let data = {
         id,
         name,
         email,
-        phone_number,
+        nohp,
         password: passwordHash,
+        role,
       };
+
       createUser(data)
         .then((result) => commonHelper.response(res, result.rows, 201, "Register success"))
         .catch((err) => res.send(err));
@@ -68,7 +85,7 @@ const workerController = {
   },
   login: async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const { email, password, role } = req.body;
       const {
         rows: [worker],
       } = await findEmail(email);
@@ -82,6 +99,11 @@ const workerController = {
       if (!isValidPassword) {
         return res.status(403).json({
           Message: "Password is invalid",
+        });
+      }
+      if (role !== "workers") {
+        return res.status(403).json({
+          Message: "Role is invalid",
         });
       }
       delete worker.password;
@@ -116,13 +138,8 @@ const workerController = {
   },
   profileWorker: async (req, res) => {
     try {
-      //Get request worker id
       const id = req.payload.id;
-
-      //Get worker by id from database
       const result = await selectWorker(id);
-
-      //Return not found if there's no worker in database
       if (!result.rowCount) return commonHelper.response(res, null, 404, "Worker not found");
 
       // //Get worker skills from database
@@ -151,12 +168,12 @@ const workerController = {
       const {
         rows: [worker],
       } = await findEmail(email);
-      const { name, phone_number, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
+      const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
 
       const data = {
         id: worker.id,
         name,
-        phone_number,
+        nohp,
         jobdesk,
         residence,
         workplace,
