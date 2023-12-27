@@ -21,17 +21,33 @@ const recruiterController = {
 
   registerRecruiter: async (req, res) => {
     try {
-      const { name, email, company_name, jobdesk, phone_number, password } = req.body;
-      const { rowCount } = await findEmail(email);
-      const salt = bcrypt.genSaltSync(10);
-      const passwordHash = bcrypt.hashSync(password, salt);
-      const id = uuidv4();
+      const { name, email, company_name, jobdesk, nohp, password, confirmPassword, role } = req.body;
 
+      // Check if email already exists
+      const { rowCount } = await findEmail(email);
       if (rowCount) {
         return res.json({
           Message: "Email is already exist",
         });
       }
+
+      // Check if the passwords match
+      if (password !== confirmPassword) {
+        return res.status(400).json({
+          Message: "Password and confirmPassword do not match",
+        });
+      }
+
+      // Check if the role is 'recruiter'
+      if (role !== "recruiters") {
+        return res.status(400).json({
+          Message: "Invalid role. Only 'recruiters' is allowed",
+        });
+      }
+
+      const salt = bcrypt.genSaltSync(10);
+      const passwordHash = bcrypt.hashSync(password, salt);
+      const id = uuidv4();
 
       let data = {
         id,
@@ -39,9 +55,11 @@ const recruiterController = {
         email,
         company_name,
         jobdesk,
-        phone_number,
+        nohp,
         password: passwordHash,
+        role,
       };
+
       createUser(data)
         .then((result) => commonHelper.response(res, result.rows, 201, "Register success"))
         .catch((err) => res.send(err));
@@ -49,9 +67,10 @@ const recruiterController = {
       console.log(error);
     }
   },
+
   login: async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const { email, password, role } = req.body;
       const {
         rows: [recruiter],
       } = await findEmail(email);
@@ -71,9 +90,16 @@ const recruiterController = {
       const payload = {
         email: recruiter.email,
         id: recruiter.id,
+        role: recruiter.role,
       };
       recruiter.token = authHelper.generateToken(payload);
       recruiter.refreshToken = authHelper.generateRefreshToken(payload);
+
+      if (role !== recruiter.role) {
+        return res.status(403).json({
+          Message: "Role is invalid",
+        });
+      }
 
       commonHelper.response(res, recruiter, 201, "login is successful");
     } catch (error) {
@@ -112,14 +138,14 @@ const recruiterController = {
       const {
         rows: [recruiter],
       } = await findEmail(email);
-      const { name, company_name, jobdesk, phone_number, company_field, workplace, description, instagram, linkedin } = req.body;
+      const { name, company_name, jobdesk, nohp, company_field, workplace, description, instagram, linkedin } = req.body;
 
       const data = {
         id: recruiter.id,
         name,
         company_name,
         jobdesk,
-        phone_number,
+        nohp,
         company_field,
         workplace,
         description,
