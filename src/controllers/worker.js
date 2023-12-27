@@ -42,8 +42,8 @@ const workerController = {
     try {
       const { name, email, nohp, password, confirmPassword, role } = req.body;
 
-      const { rowCount } = await findEmail(email);
       // Check if email already exists
+      const { rowCount } = await findEmail(email);
       if (rowCount) {
         return res.json({
           Message: "Email is already exist",
