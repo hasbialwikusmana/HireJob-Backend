@@ -13,7 +13,7 @@ const findEmail = (email) => {
 };
 
 const selectAllWorker = (filter, searchQuery, sortBy, sort, limit, offset) => {
-  return Pool.query(`SELECT workers.id, workers.name, workers.email, workers.phone_number,
+  return Pool.query(`SELECT workers.id, workers.name, workers.email, workers.nohp,
       workers.image, workers.jobdesk, workers.residence, workers.workplace,
       workers.description, workers.job_type, workers.instagram, workers.github, workers.gitlab,
       json_agg(skills.name) AS skills
@@ -30,14 +30,14 @@ const selectWorker = (id) => {
 };
 
 const createUser = (data) => {
-  const { id, name, email, phone_number, password } = data;
-  return Pool.query(`INSERT INTO workers VALUES('${id}', '${name}','${email}', '${phone_number}', '${password}')`);
+  const { id, name, email, nohp, password, role } = data;
+  return Pool.query(`INSERT INTO workers VALUES('${id}', '${name}','${email}', '${nohp}', '${password}','${role}')`);
 };
 
 const updateUser = (data) => {
-  const { id, name, phone_number, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = data;
+  const { id, name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = data;
   return Pool.query(
-    `UPDATE workers SET name='${name}', phone_number='${phone_number}', jobdesk='${jobdesk}', residence='${residence}', workplace='${workplace}', description='${description}', job_type='${job_type}', instagram='${instagram}', github='${github}', gitlab='${gitlab}' WHERE id='${id}'`
+    `UPDATE workers SET name='${name}', nohp='${nohp}', jobdesk='${jobdesk}', residence='${residence}', workplace='${workplace}', description='${description}', job_type='${job_type}', instagram='${instagram}', github='${github}', gitlab='${gitlab}' WHERE id='${id}'`
   );
 };
 
