@@ -20,14 +20,14 @@ const selectWorker = (id) => {
 };
 
 const createUser = (data) => {
-  const { id, name, email, company_name, jobdesk, phone_number, password } = data;
-  return Pool.query(`INSERT INTO recruiters (id, name, email, company_name,jobdesk,phone_number,password) VALUES ('${id}', '${name}', '${email}', '${company_name}','${jobdesk}','${phone_number}','${password}')`);
+  const { id, name, email, company_name, jobdesk, nohp, password, role } = data;
+  return Pool.query(`INSERT INTO recruiters (id, name, email, company_name,jobdesk,nohp,password,role) VALUES ('${id}', '${name}', '${email}', '${company_name}','${jobdesk}','${nohp}','${password}','${role}')`);
 };
 
 const updaterecruiter = (data) => {
-  const { id, name, company_name, jobdesk, phone_number, company_field, workplace, description, instagram, linkedin } = data;
+  const { id, name, company_name, jobdesk, nohp, company_field, workplace, description, instagram, linkedin } = data;
   return Pool.query(
-    `UPDATE recruiters SET name='${name}', company_name='${company_name}', jobdesk='${jobdesk}', phone_number='${phone_number}', company_field='${company_field}', workplace='${workplace}', description='${description}', instagram='${instagram}', linkedin='${linkedin}' WHERE id='${id}'`
+    `UPDATE recruiters SET name='${name}', company_name='${company_name}', jobdesk='${jobdesk}', nohp='${nohp}', company_field='${company_field}', workplace='${workplace}', description='${description}', instagram='${instagram}', linkedin='${linkedin}' WHERE id='${id}'`
   );
 };
 
