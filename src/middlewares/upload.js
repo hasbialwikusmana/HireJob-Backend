@@ -25,7 +25,7 @@ const multerUpload = multer({
 
 // middleware
 const upload = (req, res, next) => {
-  const multerSingle = multerUpload.single("photo");
+  const multerSingle = multerUpload.single("image");
   multerSingle(req, res, (err) => {
     if (err) {
       console.log(err);
@@ -35,4 +35,15 @@ const upload = (req, res, next) => {
   });
 };
 
-module.exports = upload;
+const uploadBanner = (req, res, next) => {
+  const multerSingle = multerUpload.single("banner_image");
+  multerSingle(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      next();
+    }
+  });
+};
+
+module.exports = { upload, uploadBanner };
