@@ -101,8 +101,15 @@ const usersControllers = {
 
       users.token = authHelper.generateToken(payload);
       if (users.role === "workers") {
+        delete users.company_name;
+        delete users.company_field;
+        delete users.banner_image;
+        delete users.instagram;
+        // delete users.role;
         commonHelper.response(res, users, 200, "Login Worker success");
-      } else {
+      } else if (users.role === "recruiters") {
+        delete users.jobdesk;
+        // delete users.role;
         commonHelper.response(res, users, 200, "Login Recruiter success");
       }
     } catch (error) {
