@@ -25,8 +25,31 @@ const selectAllWorker = (filter, searchQuery, sortBy, sort, limit, offset) => {
     ORDER BY ${sortBy} ${sort}
     LIMIT ${limit} OFFSET ${offset}`);
 };
-const selectWorker = (id) => {
-  return new Promise((resolve, reject) => Pool.query(`SELECT * FROM users WHERE id='${id}'`, (error, result) => (!error ? resolve(result) : reject(error))));
+const selectProfileDetail = (id) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(
+      `SELECT users.name, users.email, users.nohp, users.image, users.jobdesk, users.residence, users.workplace, users.description, users.job_type, users.instagram, users.github, users.gitlab FROM users WHERE id='${id}'`,
+      (error, result) => {
+        if (!error) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+  });
+};
+
+const selectProfile = (id) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(`SELECT * FROM users WHERE id='${id}'`, (error, result) => {
+      if (!error) {
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    });
+  });
 };
 
 const createUser = (data) => {
@@ -34,14 +57,14 @@ const createUser = (data) => {
   return Pool.query(`INSERT INTO users VALUES('${id}', '${name}','${email}', '${nohp}', '${password}','${role}')`);
 };
 
-const updateUser = (data) => {
+const updateUsers = (data) => {
   const { id, name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = data;
   return Pool.query(
     `UPDATE users SET name='${name}', nohp='${nohp}', jobdesk='${jobdesk}', residence='${residence}', workplace='${workplace}', description='${description}', job_type='${job_type}', instagram='${instagram}', github='${github}', gitlab='${gitlab}' WHERE id='${id}'`
   );
 };
 
-const updatePhotoUser = (data) => {
+const updateImageUsers = (data) => {
   const { id, image } = data;
   return Pool.query(`UPDATE users SET image='${image}' WHERE id='${id}'`);
 };
@@ -77,11 +100,12 @@ const deleteWorker = (email) => {
 module.exports = {
   findEmail,
   selectAllWorker,
+  selectProfileDetail,
   createUser,
-  updatePhotoUser,
-  updateUser,
+  updateImageUsers,
+  updateUsers,
   findId,
   countData,
-  selectWorker,
+  selectProfile,
   deleteWorker,
 };
