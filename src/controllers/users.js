@@ -5,9 +5,12 @@ const createError = require("http-errors");
 const errorServ = new createError.InternalServerError();
 const { v4: uuidv4 } = require("uuid");
 // const jwt = require("jsonwebtoken");
-// const cloudinary = require("../middlewares/cloudinary");
+const cloudinary = require("../middlewares/cloudinary");
 
-const { findEmail, createUser } = require("../models/users");
+const { findEmail, createUser, updateUsers, selectProfile, selectProfileDetail, updateImageUsers } = require("../models/users");
+const { selectWorkerSkills } = require("../models/skill");
+const { selectWorkerPortfolios } = require("../models/portfolio");
+const { selectWorkerWorkExperiences } = require("../models/workExperience");
 
 const usersControllers = {
   // getAllWorker: async (req, res) => {
@@ -108,92 +111,149 @@ const usersControllers = {
     }
   },
 
-  // profileWorker: async (req, res) => {
-  //   try {
-  //     const id = req.payload.id;
-  //     const result = await selectWorker(id);
-  //     if (!result.rowCount) return commonHelper.response(res, null, 404, "Worker not found");
+  getProfile: async (req, res) => {
+    const email = req.payload.email;
+    const {
+      rows: [users],
+    } = await findEmail(email);
+    if (users.role === "workers") {
+      delete users.password;
+      delete users.company_name;
+      delete users.company_field;
+      delete users.banner_image;
+      delete users.instagram;
+      delete users.role;
+      commonHelper.response(res, users, 200, "Get Profile Worker success");
+    } else if (users.role === "recruiters") {
+      delete users.password;
+      delete users.role;
+      delete users.jobdesk;
+      commonHelper.response(res, users, 200, "Get Profile Recruiter success");
+    }
+  },
 
-  //     // //Get worker skills from database
-  //     // const resultSkills = await selectWorkerSkills(id);
-  //     // result.rows[0].skill = resultSkills.rows;
+  getProfileById: async (req, res) => {
+    try {
+      const id = req.params.id;
 
-  //     // //Get portfolios from database
-  //     // const resultPortfolios = await selectWorkerPortfolios(id);
-  //     // result.rows[0].portfolio = resultPortfolios.rows;
+      if (req.payload.role === "workers") {
+        const result = await selectProfileDetail(id);
 
-  //     // //Get worker work experiences from database
-  //     // const resultWorkExperiences = await selectWorkerWorkExperiences(id);
-  //     // result.rows[0].workExperience = resultWorkExperiences.rows;
+        if (!result.rowCount) return commonHelper.response(res, null, 404, "Worker not found");
 
-  //     //Response
-  //     commonHelper.response(res, result.rows, 200, "Get detail worker successful");
-  //   } catch (error) {
-  //     console.log(error);
-  //     commonHelper.response(res, null, 500, "Failed getting detail worker");
-  //   }
-  // },
+        // //Get worker skills from database
+        const resultSkills = await selectWorkerSkills(id);
+        result.rows[0].skill = resultSkills.rows;
 
-  // updateUserWorker: async (req, res) => {
-  //   try {
-  //     const email = req.payload.email;
-  //     const {
-  //       rows: [worker],
-  //     } = await findEmail(email);
-  //     const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
+        // //Get portfolios from database
+        const resultPortfolios = await selectWorkerPortfolios(id);
+        result.rows[0].portfolio = resultPortfolios.rows;
 
-  //     const data = {
-  //       id: worker.id,
-  //       name,
-  //       nohp,
-  //       jobdesk,
-  //       residence,
-  //       workplace,
-  //       description,
-  //       job_type,
-  //       instagram,
-  //       github,
-  //       gitlab,
-  //     };
+        // //Get worker work experiences from database
+        const resultWorkExperiences = await selectWorkerWorkExperiences(id);
+        result.rows[0].workExperience = resultWorkExperiences.rows;
 
-  //     updateUser(data)
-  //       .then((result) => {
-  //         commonHelper.response(res, result.rows, 200, "Worker updated");
-  //       })
-  //       .catch((err) => res.status(500).json(err));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
+        commonHelper.response(res, result.rows, 200, "Get detail worker successful");
+      }
+      if (req.payload.role === "recruiters") {
+        const result = await selectProfile(id);
 
-  // updatePhotoWorker: async (req, res) => {
-  //   try {
-  //     const email = req.payload.email;
+        if (!result.rowCount) return commonHelper.response(res, null, 404, "Recruiter not found");
 
-  //     const result = await cloudinary.uploader.upload(req.file.path);
-  //     const image = result.secure_url;
+        commonHelper.response(res, result.rows, 200, "Get detail recruiter successful");
+      }
+    } catch (error) {
+      console.log(error);
+      commonHelper.response(res, null, 500, "Failed getting detail worker");
+    }
+  },
 
-  //     const {
-  //       rows: [worker],
-  //     } = await findEmail(email);
+  updateProfile: async (req, res) => {
+    try {
+      const role = req.payload.role;
+      if (role === "workers") {
+        const id = req.params.id;
+        console.log(id);
 
-  //     const data = {
-  //       id: worker.id,
-  //       image,
-  //     };
+        const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
 
-  //     if (worker.image !== null) {
-  //       const public_id = worker.photo.split("/").pop().split(".").shift();
-  //       await cloudinary.uploader.destroy(public_id);
-  //     }
+        console.log(id);
+        const data = {
+          id,
+          name,
+          nohp,
+          jobdesk,
+          residence,
+          workplace,
+          description,
+          job_type,
+          instagram,
+          github,
+          gitlab,
+        };
+        console.log(data);
+        updateUsers(data)
+          .then((result) => {
+            commonHelper.response(res, result.rows, 200, "Worker updated");
+          })
+          .catch((err) => res.status(500).json(err));
+      } else if (role === "recruiters") {
+        const id = req.params.id;
+        const { rows: users } = await selectProfile(id);
+        const { name, nohp, company_name, company_field, description, instagram } = req.body;
 
-  //     updatePhotoUser(data)
-  //       .then((result) => commonHelper.response(res, result.rows, 200, "Update photo success"))
-  //       .catch((err) => res.send(err));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
+        const data = {
+          id: users.id,
+          name,
+          nohp,
+          company_name,
+          company_field,
+          description,
+          instagram,
+        };
+
+        updateUsers(data)
+          .then((result) => {
+            commonHelper.response(res, result.rows, 200, "Recruiter updated");
+          })
+          .catch((err) => res.status(500).json(err));
+      } else {
+        commonHelper.response(res, null, 404, "User not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  updateImageProfile: async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const image = result.secure_url;
+
+      const {
+        rows: [users],
+      } = await selectProfile(id);
+
+      const data = {
+        id: users.id,
+        image,
+      };
+      console.log(data);
+
+      if (users.image !== null) {
+        const public_id = users.image.split("/").pop().split(".").shift();
+        await cloudinary.uploader.destroy(public_id);
+      }
+
+      updateImageUsers(data)
+        .then((result) => commonHelper.response(res, result.rows, 200, "Update image success"))
+        .catch((err) => res.send(err));
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
   // deleteWorkers: async (req, res) => {
   //   try {
