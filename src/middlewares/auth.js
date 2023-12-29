@@ -33,7 +33,7 @@ const isRecruiter = (req, res, next) => {
     if (payload.role === "recruiters") {
       next();
     } else {
-      commonHelper.response(res, null, 403, "Unauthorized, please login as recruiter");
+      commonHelper.response(res, null, 403, "Do not have access, please login as recruiter");
     }
   } else {
     commonHelper.response(res, null, 403, "User not found");
@@ -47,7 +47,7 @@ const isWorker = (req, res, next) => {
     if (payload.role === "workers") {
       next();
     } else {
-      commonHelper.response(res, null, 403, "Unauthorized, please login as worker");
+      commonHelper.response(res, null, 403, "Do not have access, please login as worker");
     }
   } else {
     commonHelper.response(res, null, 403, "User not found");
