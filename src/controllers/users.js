@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 // const jwt = require("jsonwebtoken");
 const cloudinary = require("../middlewares/cloudinary");
 
-const { findEmail, createUser, updateUsers, selectProfile, selectProfileDetail, updateImageUsers } = require("../models/users");
+const { findEmail, createUser, updateUsers, updateUsersRecruiter, selectProfile, selectProfileDetail, selectProfileRecruiter, updateImageUsers, updateImageBannerUsers, deleteUsersAccount } = require("../models/users");
 const { selectWorkerSkills } = require("../models/skill");
 const { selectWorkerPortfolios } = require("../models/portfolio");
 const { selectWorkerWorkExperiences } = require("../models/workExperience");
@@ -66,6 +66,12 @@ const usersControllers = {
         role,
       };
 
+      if (role !== "workers" && role !== "recruiters") {
+        return res.json({
+          Message: "Invalid role. Only 'workers' or 'recruiters' is allowed",
+        });
+      }
+
       createUser(data)
         .then((result) => commonHelper.response(res, result.rows, 201, "Register success"))
         .catch((err) => res.send(err));
@@ -105,10 +111,14 @@ const usersControllers = {
         delete users.company_field;
         delete users.banner_image;
         delete users.instagram;
+        delete users.linkedin;
         // delete users.role;
         commonHelper.response(res, users, 200, "Login Worker success");
       } else if (users.role === "recruiters") {
         delete users.jobdesk;
+        delete users.github;
+        delete users.gitlab;
+        delete users.workplace;
         // delete users.role;
         commonHelper.response(res, users, 200, "Login Recruiter success");
       }
@@ -135,6 +145,9 @@ const usersControllers = {
       delete users.password;
       delete users.role;
       delete users.jobdesk;
+      delete users.github;
+      delete users.gitlab;
+      delete users.workplace;
       commonHelper.response(res, users, 200, "Get Profile Recruiter success");
     }
   },
@@ -163,7 +176,7 @@ const usersControllers = {
         commonHelper.response(res, result.rows, 200, "Get detail worker successful");
       }
       if (req.payload.role === "recruiters") {
-        const result = await selectProfile(id);
+        const result = await selectProfileRecruiter(id);
 
         if (!result.rowCount) return commonHelper.response(res, null, 404, "Recruiter not found");
 
@@ -180,7 +193,6 @@ const usersControllers = {
       const role = req.payload.role;
       if (role === "workers") {
         const id = req.params.id;
-        console.log(id);
 
         const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
 
@@ -206,20 +218,22 @@ const usersControllers = {
           .catch((err) => res.status(500).json(err));
       } else if (role === "recruiters") {
         const id = req.params.id;
-        const { rows: users } = await selectProfile(id);
-        const { name, nohp, company_name, company_field, description, instagram } = req.body;
+
+        const { name, nohp, company_name, company_field, description, instagram, linkedin } = req.body;
 
         const data = {
-          id: users.id,
+          id,
           name,
           nohp,
           company_name,
           company_field,
           description,
           instagram,
+          linkedin,
         };
+        console.log(data);
 
-        updateUsers(data)
+        updateUsersRecruiter(data)
           .then((result) => {
             commonHelper.response(res, result.rows, 200, "Recruiter updated");
           })
@@ -262,26 +276,56 @@ const usersControllers = {
     }
   },
 
-  // deleteWorkers: async (req, res) => {
-  //   try {
-  //     const email = req.payload.email;
+  updateBannerProfile: async (req, res) => {
+    try {
+      const id = req.params.id;
 
-  //     const {
-  //       rows: [worker],
-  //     } = await findEmail(email);
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const banner_image = result.secure_url;
 
-  //     if (worker.image !== null) {
-  //       const public_id = worker.image.split("/").pop().split(".").shift();
-  //       await cloudinary.uploader.destroy(public_id);
-  //     }
+      const {
+        rows: [users],
+      } = await selectProfile(id);
 
-  //     deleteWorker(email)
-  //       .then((result) => commonHelper.response(res, result.rows, 200, "Delete success"))
-  //       .catch((err) => res.send(err));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
+      const data = {
+        id: users.id,
+        banner_image,
+      };
+      console.log(data);
+
+      if (users.banner_image !== null) {
+        const public_id = users.banner_image.split("/").pop().split(".").shift();
+        await cloudinary.uploader.destroy(public_id);
+      }
+
+      updateImageBannerUsers(data)
+        .then((result) => commonHelper.response(res, result.rows, 200, "Update banner success"))
+        .catch((err) => res.send(err));
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  deleteUsers: async (req, res) => {
+    try {
+      const email = req.payload.email;
+
+      const {
+        rows: [users],
+      } = await findEmail(email);
+
+      if (users.image !== null) {
+        const public_id = users.image.split("/").pop().split(".").shift();
+        await cloudinary.uploader.destroy(public_id);
+      }
+
+      deleteUsersAccount(email)
+        .then((result) => commonHelper.response(res, result.rows, 200, "Delete success"))
+        .catch((err) => res.send(err));
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 module.exports = usersControllers;
