@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const usersControllers = require("../controllers/users");
-const { protect, isRecruiter } = require("../middlewares/auth");
+const { protect, isRecruiter, isWorker } = require("../middlewares/auth");
 const { upload, uploadBanner } = require("../middlewares/upload");
 
 router.post("/register", usersControllers.register);
@@ -12,7 +12,9 @@ router.get("/profile", protect, usersControllers.getProfile);
 
 router.get("/profile/:id", protect, usersControllers.getProfileById);
 
-router.put("/profile/update-profile/:id", protect, usersControllers.updateProfile);
+router.put("/profile/worker/:id", protect, isWorker, usersControllers.updateProfileWorker);
+
+router.put("/profile/recruiter/:id", protect, isRecruiter, usersControllers.updateProfileRecruiter);
 
 router.put("/profile/update-image/:id", protect, upload, usersControllers.updateImageProfile);
 
