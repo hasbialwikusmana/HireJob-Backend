@@ -188,59 +188,58 @@ const usersControllers = {
     }
   },
 
-  updateProfile: async (req, res) => {
+  updateProfileWorker: async (req, res) => {
     try {
-      const role = req.payload.role;
-      if (role === "workers") {
-        const id = req.params.id;
+      const id = req.params.id;
 
-        const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
+      const { name, nohp, jobdesk, residence, workplace, description, job_type, instagram, github, gitlab } = req.body;
 
-        console.log(id);
-        const data = {
-          id,
-          name,
-          nohp,
-          jobdesk,
-          residence,
-          workplace,
-          description,
-          job_type,
-          instagram,
-          github,
-          gitlab,
-        };
-        console.log(data);
-        updateUsers(data)
-          .then((result) => {
-            commonHelper.response(res, result.rows, 200, "Worker updated");
-          })
-          .catch((err) => res.status(500).json(err));
-      } else if (role === "recruiters") {
-        const id = req.params.id;
+      const data = {
+        id,
+        name,
+        nohp,
+        jobdesk,
+        residence,
+        workplace,
+        description,
+        job_type,
+        instagram,
+        github,
+        gitlab,
+      };
+      console.log(data);
+      updateUsers(data)
+        .then((result) => {
+          commonHelper.response(res, result.rows, 200, "Worker updated");
+        })
+        .catch((err) => res.status(500).json(err));
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
-        const { name, nohp, company_name, company_field, description, instagram, linkedin } = req.body;
+  updateProfileRecruiter: async (req, res) => {
+    try {
+      const id = req.params.id;
 
-        const data = {
-          id,
-          name,
-          nohp,
-          company_name,
-          company_field,
-          description,
-          instagram,
-          linkedin,
-        };
-        console.log(data);
+      const { name, nohp, company_name, company_field, description, instagram, linkedin } = req.body;
 
-        updateUsersRecruiter(data)
-          .then((result) => {
-            commonHelper.response(res, result.rows, 200, "Recruiter updated");
-          })
-          .catch((err) => res.status(500).json(err));
-      } else {
-        commonHelper.response(res, null, 404, "User not found");
-      }
+      const data = {
+        id,
+        name,
+        nohp,
+        company_name,
+        company_field,
+        description,
+        instagram,
+        linkedin,
+      };
+
+      updateUsersRecruiter(data)
+        .then((result) => {
+          commonHelper.response(res, result.rows, 200, "Recruiter updated");
+        })
+        .catch((err) => res.status(500).json(err));
     } catch (error) {
       console.log(error);
     }
