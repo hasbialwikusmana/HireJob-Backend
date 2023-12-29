@@ -14,8 +14,8 @@ const findEmail = (email) => {
 
 const selectAllWorker = (filter, searchQuery, sortBy, sort, limit, offset) => {
   return Pool.query(`SELECT users.id, users.name, users.email, users.nohp,
-      users.image, users.jobdesk, users.residence, users.workplace,
-      users.description, users.job_type, users.instagram, users.github, users.gitlab,
+      users.jobdesk, users.residence, users.workplace,
+      users.description, users.job_type, users.instagram, users.github, users.gitlab, users.image,
       json_agg(skills.name) AS skills
     FROM users
       LEFT JOIN worker_skills ON users.id = worker_skills.id_worker
@@ -28,7 +28,7 @@ const selectAllWorker = (filter, searchQuery, sortBy, sort, limit, offset) => {
 const selectProfileDetail = (id) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT users.name, users.email, users.nohp, users.image, users.jobdesk, users.residence, users.workplace, users.description, users.job_type, users.instagram, users.github, users.gitlab FROM users WHERE id='${id}'`,
+      `SELECT users.name, users.email, users.nohp,  users.jobdesk, users.residence, users.workplace, users.description, users.job_type, users.instagram, users.github, users.gitlab ,users.image FROM users WHERE id='${id}'`,
       (error, result) => {
         if (!error) {
           resolve(result);
@@ -37,6 +37,18 @@ const selectProfileDetail = (id) => {
         }
       }
     );
+  });
+};
+
+const selectProfileRecruiter = (id) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(`SELECT users.name, users.email, users.nohp, users.company_name, users.company_field, users.description, users.instagram, users.linkedin,  users.image, users.banner_image FROM users WHERE id='${id}'`, (error, result) => {
+      if (!error) {
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    });
   });
 };
 
@@ -64,9 +76,19 @@ const updateUsers = (data) => {
   );
 };
 
+const updateUsersRecruiter = (data) => {
+  const { id, name, nohp, company_name, company_field, description, instagram, linkedin } = data;
+  return Pool.query(`UPDATE users SET name='${name}', nohp='${nohp}', company_name='${company_name}', company_field='${company_field}', description='${description}', instagram='${instagram}', linkedin='${linkedin}' WHERE id='${id}'`);
+};
+
 const updateImageUsers = (data) => {
   const { id, image } = data;
   return Pool.query(`UPDATE users SET image='${image}' WHERE id='${id}'`);
+};
+
+const updateImageBannerUsers = (data) => {
+  const { id, banner_image } = data;
+  return Pool.query(`UPDATE users SET banner='${banner_image}' WHERE id='${id}'`);
 };
 
 const countData = () => {
@@ -85,7 +107,7 @@ const findId = (id) => {
   );
 };
 
-const deleteWorker = (email) => {
+const deleteUsersAccount = (email) => {
   return new Promise((resolve, reject) =>
     Pool.query(`DELETE FROM users WHERE email='${email}'`, (error, result) => {
       if (!error) {
@@ -107,5 +129,8 @@ module.exports = {
   findId,
   countData,
   selectProfile,
-  deleteWorker,
+  deleteUsersAccount,
+  updateUsersRecruiter,
+  updateImageBannerUsers,
+  selectProfileRecruiter,
 };
