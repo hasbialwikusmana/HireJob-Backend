@@ -88,7 +88,7 @@ const updateImageUsers = (data) => {
 
 const updateImageBannerUsers = (data) => {
   const { id, banner_image } = data;
-  return Pool.query(`UPDATE users SET banner='${banner_image}' WHERE id='${id}'`);
+  return Pool.query(`UPDATE users SET banner_image='${banner_image}' WHERE id='${id}'`);
 };
 
 const countData = () => {
