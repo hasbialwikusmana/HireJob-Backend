@@ -1,24 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const recruiterController = require("../controllers/recruiter");
-const { protect } = require("../middlewares/auth");
+const recruiterControllers = require("../controllers/recruiter");
+const { protect, isRecruiter } = require("../middlewares/auth");
 const { upload, uploadBanner } = require("../middlewares/upload");
 
-router.post("/register", recruiterController.registerRecruiter);
+router.get("/", protect, recruiterControllers.getAllRecruiter);
+router.get("/:id", protect, recruiterControllers.getRecruiterById);
+router.put("/profile/:id", protect, isRecruiter, recruiterControllers.updateProfileRecruiter);
 
-router.post("/login", recruiterController.login);
-router.post("/refresh-token", recruiterController.refreshToken);
+router.put("/profile/update-image/:id", protect, upload, isRecruiter, recruiterControllers.updateImageProfile);
 
-router.get("/", recruiterController.getAllRecruiter);
+router.put("/profile/update-banner/:id", protect, isRecruiter, uploadBanner, recruiterControllers.updateBannerProfile);
 
-router.get("/profile", protect, recruiterController.profileRecruiter);
-
-router.put("/profile/update-profile", protect, recruiterController.updateUserRecruiter);
-
-router.put("/profile/update-photo", protect, upload, recruiterController.updatePhotoRecruiter);
-
-router.put("/profile/update-banner", protect, uploadBanner, recruiterController.updateBannerRecruiter);
-
-router.delete("/profile/delete", protect, recruiterController.deleteRecruiters);
+router.delete("/profile/delete/:id", protect, recruiterControllers.deleteUsers);
 
 module.exports = router;
