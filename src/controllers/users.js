@@ -69,7 +69,6 @@ const usersControllers = {
         delete users.company_name;
         delete users.company_field;
         delete users.banner_image;
-        delete users.instagram;
         delete users.linkedin;
         // delete users.role;
         commonHelper.response(res, users, 200, "Login Worker success");
