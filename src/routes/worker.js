@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const workerController = require("../controllers/worker");
-const { protect } = require("../middlewares/auth");
+const workerControllers = require("../controllers/worker");
+const { protect, isWorker } = require("../middlewares/auth");
 const { upload } = require("../middlewares/upload");
+const { getWorkerSkills } = require("../controllers/skill");
+const { getWorkerPortfolios } = require("../controllers/portfolio");
+const { getWorkerWorkExperiences } = require("../controllers/workExperience");
 
-router.post("/register", workerController.registerWorker);
-router.post("/login", workerController.login);
-router.post("/refresh-token", workerController.refreshToken);
+router.get("/", protect, workerControllers.getAllWorker);
+router.get("/:id", protect, workerControllers.getWorkerById);
+router.put("/profile/:id", protect, isWorker, workerControllers.updateProfileWorker);
+router.put("/profile/update-image/:id", protect, upload, workerControllers.updateImageProfile);
+router.delete("/profile/delete/:id", protect, workerControllers.deleteUsers);
 
-router.get("/", workerController.getAllWorker);
-router.get("/profile", protect, workerController.profileWorker);
-
-router.put("/profile/update-profile", protect, workerController.updateUserWorker);
-
-router.put("/profile/update-photo", protect, upload, workerController.updatePhotoWorker);
-
-router.delete("/profile/delete", protect, workerController.deleteWorkers);
+router.get("/:id_worker/skill", getWorkerSkills);
+router.get("/:id_worker/portfolio", getWorkerPortfolios);
+router.get("/:id_worker/work-experience", getWorkerWorkExperiences);
 
 module.exports = router;
