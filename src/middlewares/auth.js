@@ -41,7 +41,6 @@ const isIdValid = (req, res, next) => {
   }
 };
 
-//Checks if role in payload (login auth token) is recruiter
 const isRecruiter = (req, res, next) => {
   const payload = req.payload;
   if (payload) {
@@ -55,7 +54,6 @@ const isRecruiter = (req, res, next) => {
   }
 };
 
-//Checks if role in payload (login auth token) is worker
 const isWorker = (req, res, next) => {
   const payload = req.payload;
   if (payload) {
