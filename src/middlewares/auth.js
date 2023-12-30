@@ -26,6 +26,21 @@ const protect = (req, res, next) => {
   }
 };
 
+const isIdValid = (req, res, next) => {
+  const payload = req.payload;
+  const queryId = req.params.id_recruiter || req.params.id_worker;
+
+  if (payload) {
+    if (payload.id == queryId) {
+      next();
+    } else {
+      commonHelper.response(res, null, 403, "Modifying data created by other user is not allowed");
+    }
+  } else {
+    commonHelper.response(res, null, 403, "User not found");
+  }
+};
+
 //Checks if role in payload (login auth token) is recruiter
 const isRecruiter = (req, res, next) => {
   const payload = req.payload;
@@ -54,4 +69,4 @@ const isWorker = (req, res, next) => {
   }
 };
 
-module.exports = { protect, isRecruiter, isWorker };
+module.exports = { protect, isIdValid, isRecruiter, isWorker };
