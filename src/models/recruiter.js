@@ -2,7 +2,7 @@ const Pool = require("../config/db");
 
 const selectAllRecruiter = (filter, searchQuery, sortBy, sort, limit, offset) => {
   return Pool.query(
-    `SELECT users.id, users.name, users.email, users.company_name, users.jobdesk, users.nohp, users.company_field, users.workplace, users.description, users.instagram, users.linkedin, users.image, users.banner_image FROM users WHERE users.role='recruiters' AND users.name ILIKE '%${searchQuery}%' ORDER BY ${filter} ${sort} LIMIT ${limit} OFFSET ${offset}`
+    `SELECT users.id, users.name, users.email, users.company_name, users.jobdesk, users.nohp, users.company_field, users.workplace, users.description, users.instagram, users.linkedin, users.image, users.banner_image FROM users WHERE users.role='recruiters' AND users.${filter} ILIKE '%${searchQuery}%' ORDER BY ${sortBy} ${sort} LIMIT ${limit} OFFSET ${offset}`
   );
 };
 
