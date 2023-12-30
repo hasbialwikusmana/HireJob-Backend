@@ -5,7 +5,6 @@ const { protect, isWorker } = require("../middlewares/auth");
 
 const { getAllWorkExperiences, getDetailWorkExperience, createWorkExperience, updateWorkExperience, deleteWorkExperience } = require("../controllers/workExperience");
 
-//WorkExperiences router
 router.get("/", getAllWorkExperiences);
 router.get("/:id", getDetailWorkExperience);
 router.post("/", protect, isWorker, createWorkExperience);
