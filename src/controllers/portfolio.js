@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const commonHelper = require("../helpers/common");
-const googleDrive = require("../config/googleDrive");
+const cloudinary = require("../middlewares/cloudinary");
 const portfolioModel = require("../models/portfolio");
 
 const getAllPortfolios = async (req, res) => {
@@ -70,9 +70,8 @@ const createPortfolio = async (req, res) => {
     data.id = uuidv4();
     data.id_worker = id_worker;
     if (req.file) {
-      const uploadResult = await googleDrive.uploadImage(req.file);
-      const parentPath = process.env.GOOGLE_DRIVE_PHOTO_PATH;
-      data.image = parentPath.concat(uploadResult.id);
+      const uploadResult = await cloudinary.uploader.upload(req.file.path);
+      data.image = uploadResult.secure_url;
     }
 
     //Insert portfolio to database
@@ -103,20 +102,17 @@ const updatePortfolio = async (req, res) => {
     data.id = id;
     data.id_worker = id_worker;
     // Update image if image already exists in database
-    if (req.file && oldData.image != "") {
-      const oldImage = oldData.image;
-      const oldImageId = oldImage.split("=")[1];
-      const updateResult = await googleDrive.updateImage(req.file, oldImageId);
-      const parentPath = process.env.GOOGLE_DRIVE_PHOTO_PATH;
-      data.image = parentPath.concat(updateResult.id);
+    if (req.file) {
+      if (oldData.image) {
+        const publicId = oldData.image.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
 
-      // Upload image if image doesn't exists in database
-    } else if (req.file && oldData.image == "") {
-      const uploadResult = await googleDrive.uploadImage(req.file);
-      const parentPath = process.env.GOOGLE_DRIVE_PHOTO_PATH;
-      data.image = parentPath.concat(uploadResult.id);
-
-      // Use old image if user doesn't upload image
+        const uploadResult = await cloudinary.uploader.upload(req.file.path);
+        data.image = uploadResult.secure_url;
+      } else {
+        const uploadResult = await cloudinary.uploader.upload(req.file.path);
+        data.image = uploadResult.secure_url;
+      }
     } else {
       data.image = oldData.image;
     }
@@ -142,11 +138,8 @@ const deletePortfolio = async (req, res) => {
     if (!oldResult.rowCount) return commonHelper.response(res, null, 404, "Portfolio not found");
 
     // Delete user's image
-    const oldPhoto = oldResult.rows[0].image;
-    if (oldPhoto != null) {
-      const oldPhotoId = oldPhoto.split("=")[1];
-      await googleDrive.deleteImage(oldPhotoId);
-    }
+    const publicId = oldResult.rows[0].image.split("/").pop().split(".")[0];
+    await cloudinary.uploader.destroy(publicId);
 
     //Delete portfolio from database
     const result = portfolioModel.deletePortfolio(id);
