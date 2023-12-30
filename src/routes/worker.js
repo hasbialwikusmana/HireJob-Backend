@@ -10,11 +10,11 @@ const { getWorkerWorkExperiences } = require("../controllers/workExperience");
 router.get("/", protect, workerControllers.getAllWorker);
 router.get("/:id", protect, workerControllers.getWorkerById);
 router.put("/profile/:id", protect, isWorker, workerControllers.updateProfileWorker);
-router.put("/profile/update-image/:id", protect, upload, workerControllers.updateImageProfile);
-router.delete("/profile/delete/:id", protect, workerControllers.deleteUsers);
+router.put("/profile/update-image/:id", protect, isWorker, upload, workerControllers.updateImageProfile);
+router.delete("/profile/delete/:id", protect, isWorker, workerControllers.deleteUsers);
 
-router.get("/:id_worker/skill", getWorkerSkills);
-router.get("/:id_worker/portfolio", getWorkerPortfolios);
-router.get("/:id_worker/work-experience", getWorkerWorkExperiences);
+router.get("/:id_worker/skill", protect, getWorkerSkills);
+router.get("/:id_worker/portfolio", protect, getWorkerPortfolios);
+router.get("/:id_worker/work-experience", protect, getWorkerWorkExperiences);
 
 module.exports = router;

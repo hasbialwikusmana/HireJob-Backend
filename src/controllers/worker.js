@@ -45,15 +45,12 @@ const workerControllers = {
 
       if (!result.rowCount) return commonHelper.response(res, null, 404, "Worker not found");
 
-      // //Get worker skills from database
       const resultSkills = await selectWorkerSkills(id);
       result.rows[0].skill = resultSkills.rows;
 
-      // //Get portfolios from database
       const resultPortfolios = await selectWorkerPortfolios(id);
       result.rows[0].portfolio = resultPortfolios.rows;
 
-      // //Get worker work experiences from database
       const resultWorkExperiences = await selectWorkerWorkExperiences(id);
       result.rows[0].workExperience = resultWorkExperiences.rows;
 
