@@ -10,7 +10,6 @@ const skillControllers = {
 
       if (!results.rowCount) return commonHelper.response(res, null, 404, "Skills not found");
 
-      //Response
       commonHelper.response(res, results.rows, 200, "Get all skills successful");
     } catch (error) {
       console.log(error);
@@ -39,7 +38,6 @@ const skillControllers = {
 
       if (!result.rowCount) return commonHelper.response(res, null, 404, "Skill not found");
 
-      //Response
       commonHelper.response(res, result.rows, 200, "Get detail skill successful");
     } catch (error) {
       console.log(error);
@@ -83,7 +81,6 @@ const skillControllers = {
         result = await skillModel.insertWorkerSkill(insertSkill);
       }
 
-      //Response
       commonHelper.response(res, result.rows, 200, "Create skill successful");
     } catch (error) {
       console.log(error);
