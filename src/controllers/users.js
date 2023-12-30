@@ -12,7 +12,6 @@ const usersControllers = {
     try {
       const { name, email, nohp, password, role } = req.body;
 
-      // Check if email already exists
       const { rowCount } = await findEmail(email);
       if (rowCount) {
         return commonHelper.response(res, null, 409, "Email already exists");
@@ -70,14 +69,14 @@ const usersControllers = {
         delete users.company_field;
         delete users.banner_image;
         delete users.linkedin;
-        // delete users.role;
+
         commonHelper.response(res, users, 200, "Login Worker success");
       } else if (users.role === "recruiters") {
         delete users.jobdesk;
         delete users.github;
         delete users.gitlab;
         delete users.workplace;
-        // delete users.role;
+
         commonHelper.response(res, users, 200, "Login Recruiter success");
       }
     } catch (error) {
