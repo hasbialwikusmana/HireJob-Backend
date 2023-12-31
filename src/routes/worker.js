@@ -7,7 +7,7 @@ const { getWorkerSkills } = require("../controllers/skill");
 const { getWorkerPortfolios } = require("../controllers/portfolio");
 const { getWorkerWorkExperiences } = require("../controllers/workExperience");
 
-router.get("/", protect, workerControllers.getAllWorker);
+router.get("/", workerControllers.getAllWorker);
 router.get("/:id", protect, workerControllers.getWorkerById);
 router.put("/profile/:id", protect, isWorker, workerControllers.updateProfileWorker);
 router.put("/profile/update-image/:id", protect, isWorker, upload, workerControllers.updateImageProfile);
