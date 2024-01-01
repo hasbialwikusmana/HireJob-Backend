@@ -6,8 +6,8 @@ const { protect, isWorker } = require("../middlewares/auth");
 
 const { getAllPortfolios, getDetailPortfolio, createPortfolio, updatePortfolio, deletePortfolio } = require("../controllers/portfolio");
 
-router.get("/", protect, getAllPortfolios);
-router.get("/:id", protect, getDetailPortfolio);
+router.get("/", getAllPortfolios);
+router.get("/:id", getDetailPortfolio);
 router.post("/", protect, isWorker, upload, createPortfolio);
 router.put("/:id", protect, isWorker, upload, updatePortfolio);
 router.delete("/:id", protect, isWorker, deletePortfolio);
