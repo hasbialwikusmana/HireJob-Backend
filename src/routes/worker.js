@@ -8,7 +8,7 @@ const { getWorkerPortfolios } = require("../controllers/portfolio");
 const { getWorkerWorkExperiences } = require("../controllers/workExperience");
 
 router.get("/", workerControllers.getAllWorker);
-router.get("/:id", protect, workerControllers.getWorkerById);
+router.get("/:id", workerControllers.getWorkerById);
 router.put("/profile/:id", protect, isWorker, workerControllers.updateProfileWorker);
 router.put("/profile/update-image/:id", protect, isWorker, upload, workerControllers.updateImageProfile);
 router.delete("/profile/delete/:id", protect, isWorker, workerControllers.deleteUsers);
