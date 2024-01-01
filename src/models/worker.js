@@ -15,18 +15,11 @@ const selectAllWorker = (filter, searchQuery, sortBy, sort, limit, offset) => {
 };
 
 const selectProfileWorker = (id) => {
-  return new Promise((resolve, reject) => {
-    Pool.query(
-      `SELECT users.name, users.email, users.nohp,  users.jobdesk, users.residence, users.workplace, users.description, users.job_type, users.instagram, users.github, users.gitlab ,users.image FROM users WHERE id='${id}'`,
-      (error, result) => {
-        if (!error) {
-          resolve(result);
-        } else {
-          reject(error);
-        }
-      }
-    );
-  });
+  return Pool.query(`SELECT users.id, users.name, users.email, users.nohp,
+      users.jobdesk, users.residence, users.workplace,
+      users.description, users.job_type, users.instagram, users.github, users.gitlab, users.image
+    FROM users
+    WHERE users.role = 'workers' AND users.id = '${id}'`);
 };
 
 const updateWorker = (data) => {
