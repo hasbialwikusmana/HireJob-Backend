@@ -22,10 +22,10 @@ const selectProfileRecruiter = (id) => {
 };
 
 const updateRecruiter = (data) => {
-  const { id, name, email, nohp, company_name, jobdesk, company_field, workplace, description, instagram, linkedin } = data;
+  const { id, company_name, company_field, residence, description, email, nohp, instagram, linkedin } = data;
   return new Promise((resolve, reject) => {
     Pool.query(
-      `UPDATE users SET name='${name}', email='${email}', nohp='${nohp}', company_name='${company_name}', jobdesk='${jobdesk}', company_field='${company_field}', workplace='${workplace}', description='${description}', instagram='${instagram}', linkedin='${linkedin}' WHERE id='${id}'`,
+      `UPDATE users SET company_name='${company_name}', company_field='${company_field}', residence='${residence}', description='${description}', email='${email}', nohp='${nohp}', instagram='${instagram}', linkedin='${linkedin}' WHERE id='${id}'`,
       (error, result) => {
         if (!error) {
           resolve(result);
