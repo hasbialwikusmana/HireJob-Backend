@@ -50,20 +50,17 @@ const recruiterControllers = {
     try {
       const id = req.params.id;
 
-      const { name, email, company_name, jobdesk, nohp, company_field, workplace, description, instagram, linkedin } = req.body;
+      const { company_name, company_field, residence, description, email, nohp, instagram } = req.body;
 
       const data = {
         id,
-        name,
-        email,
         company_name,
-        jobdesk,
-        nohp,
         company_field,
-        workplace,
+        residence,
         description,
+        email,
+        nohp,
         instagram,
-        linkedin,
       };
 
       updateRecruiter(data)
