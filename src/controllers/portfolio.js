@@ -42,8 +42,15 @@ const getDetailPortfolio = async (req, res) => {
 const createPortfolio = async (req, res) => {
   try {
     const id_worker = req.payload.id;
-    const data = req.body;
-    if (req.file == undefined) return commonHelper.response(res, null, 400, "Please input image");
+    const { name, portfolio_type, repo_link, image } = req.body;
+
+    const data = {
+      name,
+      portfolio_type,
+      repo_link,
+      image,
+    };
+
     data.id = uuidv4();
     data.id_worker = id_worker;
     if (req.file) {
