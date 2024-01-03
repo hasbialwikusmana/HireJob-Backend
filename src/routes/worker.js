@@ -6,12 +6,12 @@ const { upload } = require("../middlewares/upload");
 const { getWorkerSkills } = require("../controllers/skill");
 const { getWorkerPortfolios } = require("../controllers/portfolio");
 const { getWorkerWorkExperiences } = require("../controllers/workExperience");
-const updateWorkerValidation = require("../validations/worker");
+const { updateWorker } = require("../validations/worker");
 const validation = require("../middlewares/validation");
 
 router.get("/", workerControllers.getAllWorker);
 router.get("/:id", workerControllers.getWorkerById);
-router.put("/profile/:id", protect, isWorker, updateWorkerValidation, validation, workerControllers.updateProfileWorker);
+router.put("/profile/:id", protect, isWorker, updateWorker, validation, workerControllers.updateProfileWorker);
 
 router.put("/profile/update-image/:id", protect, isWorker, upload, workerControllers.updateImageProfile);
 router.delete("/profile/delete/:id", protect, isWorker, workerControllers.deleteUsers);
