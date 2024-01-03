@@ -8,7 +8,7 @@ const multerUpload = multer({
     const maxSize = 2 * 1024 * 1024;
     if (fileSize > maxSize) {
       const error = {
-        message: "File size exceeds 2 MB",
+        message: "File size too large (max 2MB)",
       };
       return cb(error, false);
     }
@@ -28,10 +28,14 @@ const upload = (req, res, next) => {
   const multerSingle = multerUpload.single("image");
   multerSingle(req, res, (err) => {
     if (err) {
-      console.log(err);
-    } else {
-      next();
+      console.error(err);
+      return res.status(400).json({
+        status: "error",
+        message: "Bad request",
+        errors: [{ field: "image", message: err.message }],
+      });
     }
+    next();
   });
 };
 
@@ -40,6 +44,11 @@ const uploadBanner = (req, res, next) => {
   multerSingle(req, res, (err) => {
     if (err) {
       console.log(err);
+      return res.status(400).json({
+        status: "error",
+        message: "Bad request",
+        errors: [{ field: "banner_image", message: err.message }],
+      });
     } else {
       next();
     }
