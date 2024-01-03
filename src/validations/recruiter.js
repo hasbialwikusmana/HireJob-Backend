@@ -1,36 +1,20 @@
 const { check } = require("express-validator");
 
 const updateRecruiterValidation = [
-  // name
-  check("name").notEmpty().withMessage("Name cannot be empty"),
-
-  // email
-  check("email").notEmpty().withMessage("Email cannot be empty"),
-  check("email").isEmail().withMessage("Email must be a valid email"),
-
-  // company_name
-  check("company_name").notEmpty().withMessage("Company name cannot be empty"),
-
-  // jobdesk
-  check("jobdesk").notEmpty().withMessage("Jobdesk cannot be empty"),
-
-  // nohp
-  check("nohp").notEmpty().withMessage("Nohp cannot be empty"),
-
-  // company_field
-  check("company_field").notEmpty().withMessage("Company field cannot be empty"),
-
-  // workplace
-  check("workplace").notEmpty().withMessage("Workplace cannot be empty"),
-
-  // description
-  check("description").notEmpty().withMessage("Description cannot be empty"),
-
-  // instagram
-  check("instagram").notEmpty().withMessage("Instagram cannot be empty"),
-
-  // linkedin
-  check("linkedin").notEmpty().withMessage("Linkedin cannot be empty"),
+  check("company_name", "Company name is required").notEmpty(),
+  check("company_field", "Company field is required").notEmpty(),
+  check("residence", "Residence is required").notEmpty(),
+  check("description", "Description is required").notEmpty(),
+  check("email", "Email is required").notEmpty(),
+  check("email", "Email must be gmail.com").custom((value) => {
+    if (!value.endsWith("@gmail.com")) {
+      throw new Error("Email must be gmail.com");
+    }
+    return true;
+  }),
+  check("nohp", "No HP is required").notEmpty(),
+  check("instagram", "Instagram is required").notEmpty(),
+  check("linkedin", "Linkedin is required").notEmpty(),
 ];
 
 module.exports = updateRecruiterValidation;
