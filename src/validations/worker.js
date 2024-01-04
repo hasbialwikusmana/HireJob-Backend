@@ -68,4 +68,28 @@ const updateWorker = [
   check("gitlab").notEmpty().withMessage("Gitlab cannot be empty"),
 ];
 
-module.exports = { updateWorker, createWorker };
+const updateWorkerImage = [
+  //image
+  check("image", "Image is required").custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error("Image is required");
+    }
+
+    const allowedExtensions = ["jpg", "jpeg", "png"]; // Sesuaikan dengan ekstensi gambar yang diizinkan
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+    const fileExtension = req.file.originalname.split(".").pop().toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      throw new Error("Only JPG, JPEG, PNG, and GIF files are allowed");
+    }
+
+    if (req.file.size > maxFileSize) {
+      throw new Error("Image size must be less than 2MB");
+    }
+
+    return true;
+  }),
+];
+
+module.exports = { updateWorker, createWorker, updateWorkerImage };
