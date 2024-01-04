@@ -12,11 +12,6 @@ const usersControllers = {
     try {
       const { name, email, nohp, password, role } = req.body;
 
-      const { rowCount } = await findEmail(email);
-      if (rowCount) {
-        return commonHelper.response(res, null, 409, "Email already exists");
-      }
-
       const salt = bcrypt.genSaltSync(10);
       const passwordHash = bcrypt.hashSync(password, salt);
       const id = uuidv4();
@@ -30,11 +25,7 @@ const usersControllers = {
         role,
       };
 
-      if (role !== "workers" && role !== "recruiters") {
-        return commonHelper.response(res, null, 400, "Role must be workers or recruiters");
-      }
-
-      createUser(data)
+      await createUser(data)
         .then((result) => commonHelper.response(res, result.rows, 201, "Register success"))
         .catch((err) => res.send(err));
     } catch (error) {
