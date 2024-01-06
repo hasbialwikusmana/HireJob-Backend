@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const workerControllers = require("../controllers/worker");
-const { protect, isWorker } = require("../middlewares/auth");
+const { protect, isWorker, isRecruiter } = require("../middlewares/auth");
 const { upload } = require("../middlewares/upload");
 const { getWorkerSkills } = require("../controllers/skill");
 const { getWorkerPortfolios } = require("../controllers/portfolio");
 const { getWorkerWorkExperiences } = require("../controllers/workExperience");
+const { getWorkerHires, createHire } = require("../controllers/hire");
 const { updateWorker, updateWorkerImage } = require("../validations/worker");
 const validation = require("../middlewares/validation");
 
@@ -19,5 +20,8 @@ router.delete("/profile/delete/:id", protect, isWorker, workerControllers.delete
 router.get("/:id_worker/skill", protect, getWorkerSkills);
 router.get("/:id_worker/portfolio", protect, getWorkerPortfolios);
 router.get("/:id_worker/work-experience", protect, getWorkerWorkExperiences);
+router.get("/:id_worker/hire", getWorkerHires);
+//For recruiter
+router.post("/:id_worker/hire", protect, isRecruiter, createHire);
 
 module.exports = router;
