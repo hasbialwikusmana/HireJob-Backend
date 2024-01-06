@@ -5,7 +5,6 @@ const { protect, isWorker } = require("../middlewares/auth");
 
 const { getAllWorkExperiences, getDetailWorkExperience, createWorkExperience, updateWorkExperience, deleteWorkExperience } = require("../controllers/workExperience");
 
-// validate
 const { createWorkExperienceValidation, updateWorkExperienceValidation } = require("../validations/workExperience");
 const validation = require("../middlewares/validation");
 
