@@ -8,6 +8,7 @@ const { getWorkerPortfolios } = require("../controllers/portfolio");
 const { getWorkerWorkExperiences } = require("../controllers/workExperience");
 const { getWorkerHires, createHire } = require("../controllers/hire");
 const { updateWorker, updateWorkerImage } = require("../validations/worker");
+const hireValidation = require("../validations/hire");
 const validation = require("../middlewares/validation");
 
 router.get("/", workerControllers.getAllWorker);
@@ -20,8 +21,9 @@ router.delete("/profile/delete/:id", protect, isWorker, workerControllers.delete
 router.get("/:id_worker/skill", protect, getWorkerSkills);
 router.get("/:id_worker/portfolio", protect, getWorkerPortfolios);
 router.get("/:id_worker/work-experience", protect, getWorkerWorkExperiences);
-router.get("/:id_worker/hire", getWorkerHires);
+router.get("/:id_worker/hire", protect, getWorkerHires);
+
 //For recruiter
-router.post("/:id_worker/hire", protect, isRecruiter, createHire);
+router.post("/:id_worker/hire", protect, isRecruiter, hireValidation, validation, createHire);
 
 module.exports = router;
