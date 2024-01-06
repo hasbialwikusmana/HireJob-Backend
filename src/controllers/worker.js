@@ -40,20 +40,23 @@ const workerControllers = {
   getWorkerById: async (req, res) => {
     try {
       const id = req.params.id;
-      const result = await selectProfileWorker(id);
+      const {
+        rows: [worker],
+      } = await selectProfileWorker(id);
+      if (!worker) return commonHelper.response(res, null, 404, "Worker not found");
 
-      if (!result.rowCount) return commonHelper.response(res, null, 404, "Worker not found");
+      const skills = await selectWorkerSkills(id);
+      const portfolios = await selectWorkerPortfolios(id);
+      const workExperiences = await selectWorkerWorkExperiences(id);
 
-      const resultSkills = await selectWorkerSkills(id);
-      result.rows[0].skill = resultSkills.rows;
+      const data = {
+        ...worker,
+        skills: skills.rows,
+        portfolios: portfolios.rows,
+        workExperiences: workExperiences.rows,
+      };
 
-      const resultPortfolios = await selectWorkerPortfolios(id);
-      result.rows[0].portfolio = resultPortfolios.rows;
-
-      const resultWorkExperiences = await selectWorkerWorkExperiences(id);
-      result.rows[0].workExperience = resultWorkExperiences.rows;
-
-      commonHelper.response(res, result.rows, 200, "Get detail worker successful");
+      commonHelper.response(res, data, 200, "Get detail worker successful");
     } catch (error) {
       console.log(error);
       commonHelper.response(res, null, 500, "Failed getting detail worker");
