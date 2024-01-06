@@ -20,11 +20,12 @@ const getWorkerWorkExperiences = async (req, res) => {
   try {
     const id_worker = req.params.id_worker;
 
-    const results = await workExperienceModel.selectWorkerWorkExperiences(id_worker);
+    const {
+      rows: [worker],
+    } = await workExperienceModel.selectWorkerWorkExperiences(id_worker);
+    if (!worker) return commonHelper.response(res, null, 404, "Worker work experience not found");
 
-    if (!results.rowCount) return commonHelper.response(res, null, 404, "Worker's work experiences not found");
-
-    commonHelper.response(res, results.rows, 200, "Get worker's work experiences successful");
+    commonHelper.response(res, worker, 200, "Get all work experiences successful");
   } catch (error) {
     console.log(error);
     commonHelper.response(res, null, 500, "Failed getting work experiences");
@@ -35,12 +36,12 @@ const getDetailWorkExperience = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const result = await workExperienceModel.selectWorkExperience(id);
+    const {
+      rows: [workExperience],
+    } = await workExperienceModel.selectWorkExperience(id);
+    if (!workExperience) return commonHelper.response(res, null, 404, "Work experience not found");
 
-    if (!result.rowCount) return commonHelper.response(res, null, 404, "Work experience not found");
-
-    // Response
-    commonHelper.response(res, result.rows, 200, "Get detail work experience successful");
+    commonHelper.response(res, workExperience, 200, "Get detail work experience successful");
   } catch (error) {
     console.log(error);
     commonHelper.response(res, null, 500, "Failed getting detail work experience");
