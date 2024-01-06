@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const recruiterControllers = require("../controllers/recruiter");
+const { getRecruiterHires } = require("../controllers/hire");
 const { protect, isRecruiter } = require("../middlewares/auth");
 const { upload, uploadBanner } = require("../middlewares/upload");
 const { updateRecruiterValidation, updateImageValidation, updateBannerValidation } = require("../validations/recruiter");
@@ -8,6 +9,7 @@ const validation = require("../middlewares/validation");
 
 router.get("/", recruiterControllers.getAllRecruiter);
 router.get("/:id", recruiterControllers.getRecruiterById);
+router.get("/:id_recruiter/hire", getRecruiterHires);
 router.put("/profile/:id", protect, isRecruiter, updateRecruiterValidation, validation, recruiterControllers.updateProfileRecruiter);
 
 router.put("/profile/update-image/:id", protect, upload, isRecruiter, updateImageValidation, validation, recruiterControllers.updateImageProfile);
