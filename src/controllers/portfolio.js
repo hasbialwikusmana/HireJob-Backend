@@ -18,9 +18,12 @@ const getAllPortfolios = async (req, res) => {
 const getWorkerPortfolios = async (req, res) => {
   try {
     const id_worker = req.params.id_worker;
-    const results = await portfolioModel.selectWorkerPortfolios(id_worker);
-    if (!results.rowCount) return commonHelper.response(res, null, 404, "Worker portfolios not found");
-    commonHelper.response(res, results.rows, 200, "Get worker portfolios successful");
+    const {
+      rows: [worker],
+    } = await portfolioModel.selectWorkerPortfolios(id_worker);
+    if (!worker) return commonHelper.response(res, null, 404, "Worker not found");
+
+    commonHelper.response(res, worker, 200, "Get all portfolios successful");
   } catch (error) {
     console.log(error);
     commonHelper.response(res, null, 500, "Failed getting portfolios");
@@ -30,9 +33,12 @@ const getWorkerPortfolios = async (req, res) => {
 const getDetailPortfolio = async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await portfolioModel.selectPortfolio(id);
-    if (!result.rowCount) return commonHelper.response(res, null, 404, "Portfolio not found");
-    commonHelper.response(res, result.rows, 200, "Get detail portfolio successful");
+    const {
+      rows: [portfolio],
+    } = await portfolioModel.selectPortfolio(id);
+    if (!portfolio) return commonHelper.response(res, null, 404, "Portfolio not found");
+
+    commonHelper.response(res, portfolio, 200, "Get detail portfolio successful");
   } catch (error) {
     console.log(error);
     commonHelper.response(res, null, 500, "Failed getting detail portfolio");
