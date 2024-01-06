@@ -6,7 +6,6 @@ const { protect, isWorker } = require("../middlewares/auth");
 
 const { getAllPortfolios, getDetailPortfolio, createPortfolio, updatePortfolio, deletePortfolio } = require("../controllers/portfolio");
 
-// validate
 const { createPortfolioValidation, updatePortfolioValidation } = require("../validations/portfolio");
 const validation = require("../middlewares/validation");
 
