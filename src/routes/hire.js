@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllHires, getDetailHire, deleteHire } = require("../controllers/hire");
+const { getAllHires, getDetailHire, deleteHires } = require("../controllers/hire");
 const { protect } = require("../middlewares/auth");
 
-//Hires router
 router.get("/", getAllHires);
 router.get("/:id", getDetailHire);
-router.delete("/:id", protect, deleteHire);
+router.delete("/:id", protect, deleteHires);
 
 module.exports = router;
