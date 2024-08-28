@@ -113,6 +113,12 @@ CLOUD_API_SECRET =
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Rest API
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/27670180/2sAXjF8uy1)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Related Project
 
 :rocket: [`Backend Hire Job`](https://github.com/hasbialwikusmana/HireJob-Backend)
@@ -122,12 +128,6 @@ CLOUD_API_SECRET =
 :rocket: [`Web Service`](hire-job-backend-blue.vercel.app/)
 
 :rocket: [`Demo Hire Job`](https://peworldapp.netlify.app/)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-### Rest API
-
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/27670180/2sAXjF8uy1)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
