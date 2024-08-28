@@ -115,7 +115,7 @@ CLOUD_API_SECRET =
 
 ## Rest API
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/27670180/2sAXjF8uy1)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/27670180/2sA3BuVU3Q)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
