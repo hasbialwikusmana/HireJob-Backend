@@ -177,7 +177,7 @@ CLOUD_API_SECRET =
 
 ## Contact
 
-My Email : [mailto:hasbialwi70@gmail.com](mailto:hasbialwi70@gmail.com)
+My Email : [hasbialwi70@gmail.com](mailto:hasbialwi70@gmail.com)
 
 Project Link: [https://github.com/hasbialwikusmana/HireJob-Frontend](https://github.com/hasbialwikusmana/HireJob-Frontend)
 
