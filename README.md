@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/hasbialwikusmana/HireJob-Backend">
+  <a href="https://github.com/hasbialwikusmana/HireJob-Backend" target="_blank">
     <img src="https://github.com/user-attachments/assets/3abbb5ea-28c9-4325-9f34-d026a3dbe2bc" alt="Logo" width="100%">
   </a>
 
@@ -12,7 +12,7 @@
   <p align="center">
     Find talented & best developers in various fields.
     <br />
-    <a href="https://peworldapp.netlify.app/">View Demo</a>
+    <a href="https://peworldapp.netlify.app/" target="_blank">View Demo</a>
   </p>
 </div>
 
@@ -23,6 +23,50 @@
 **Hire Job** is an application that provides companies with access to find the best workforce based on the required skills or abilities, while also facilitating job seekers in discovering job opportunities that match their expertise. This application is equipped with various features, such as allowing companies to view potential candidates they wish to recruit, modify profiles, and for job seekers, add skills, update profiles, and delete unnecessary data.
 
 This application is developed individually by Hasbi using React.js, Express.js, and PostgreSQL technologies.
+
+## Features
+
+1. **User Authentication**
+
+   - **Login & Registration**: Users can register as workers or recruiters and log in to the application.
+   - **JWT-based Authentication**: Secure user authentication using JSON Web Tokens.
+
+2. **Profile Management**
+
+   - **Edit Profile**: Users can edit their profile, including personal information, profile picture, and other details.
+   - **Manage Skills**: Workers can add, edit, or delete their skills.
+   - **Portfolio & Experience**: Workers can add project portfolios and work experience to their profiles.
+
+3. **Job Seeker Features**
+
+   - **Job Search**: Search for jobs based on skills and other criteria.
+   - **Job Application**: Apply for available jobs.
+
+4. **Recruiter Features**
+
+   - **Search Candidates**: Recruiters can search for candidates based on skills and experience.
+   - **View Candidate Profiles**: View full worker profiles, including portfolios and work experience.
+   - **Hire Candidates**: Contact suitable candidates to offer jobs.
+
+5. **Security Features**
+
+   - **Password Hashing**: Secure password storage using bcrypt.
+   - **Input Validation**: Validate user input to prevent injection attacks.
+   - **Role-based Access Control**: Differentiate permissions for workers and recruiters.
+
+6. **File Upload Management**
+
+   - **Cloudinary Integration**: Upload and manage user profile pictures and portfolio images with Cloudinary.
+
+7. **Responsive Design**
+
+   - **Mobile & Desktop Support**: The API supports responsive design, ensuring smooth operation on both mobile and desktop platforms.
+
+8. **Documentation & Testing**
+
+   - **Postman Collection**: Documented API endpoints with Postman.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
 
@@ -133,7 +177,7 @@ CLOUD_API_SECRET =
 
 ## Contact
 
-My Email : hasbialwi70@gmail.com
+My Email : [mailto:hasbialwi70@gmail.com](mailto:hasbialwi70@gmail.com)
 
 Project Link: [https://github.com/hasbialwikusmana/HireJob-Frontend](https://github.com/hasbialwikusmana/HireJob-Frontend)
 

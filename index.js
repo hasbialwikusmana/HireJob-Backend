@@ -16,6 +16,9 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(morgan("dev"));
+app.get("/", (req, res) => {
+  res.send("The server is up and running smoothly.");
+});
 app.use("/v1", mainRouter);
 app.use("img", express.static("src/upload"));
 
